@@ -54,9 +54,15 @@ def find_gaps(state):
 
     return gaps
 
+# A state is contiguous if there are no gaps in it.
 def is_contiguous(state):
     return find_gaps(state) == []
 
+# This functions finds the states that can be reached by making a single move
+# starting with the given state.
+# We consider only those moves which are likely to lead to minimum cost, i.e.
+# the source slot is one of the extremes and the destination is one of the
+# ends of the given gaps.
 def find_next_states(state):
     if(is_contiguous(state) == True):
         next_states = []
@@ -72,6 +78,11 @@ def find_next_states(state):
         next_states = [ move(state, src, dest) for src, dest in sds]
     return next_states
 
+# This is temporary hack to circumvent the fact that lists are not allowed
+# to be used as dictionary keys. So, we turn them into strings and use them
+# as keys instead. This is not a great idea as comparing strings is 
+# expensive (linear in their length). For now, we settle with this. We will
+# see if anything else can be done later.
 class MyTable:
     def __init__(self):
         self.table = {}
@@ -84,6 +95,7 @@ class MyTable:
     def put(self, k, v):
         self.table[str(k)] = v
 
+# The main min-cost algorithm.
 def min_cost(state):
     table = MyTable()
     min_cost = len(state) # the number of moves is definitely less than
@@ -98,7 +110,8 @@ def min_cost(state):
                 table.put(state, 1 + min(next_mins))
         return table.get(state)
     return min_aux(state)
-        
+
+##################### test cases - begin #####################################
 def t_move_1():
     s1 = [True, False, True]
     src = 2
@@ -134,7 +147,9 @@ def t_min():
     print(min_cost([False, False, False, True, False, False, False]))
     print(min_cost([False, False, False, True, False, False, False, True]))
 
+##################### test cases - end #####################################
 
+# Main test driver.
 if __name__ == "__main__":
     #t_move_1()
     #t_move_2()
