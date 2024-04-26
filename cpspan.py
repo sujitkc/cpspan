@@ -74,7 +74,7 @@ def find_next_states(state):
             sds.append((lend, gap[0]))
             sds.append((lend, gap[1]))
             sds.append((rend, gap[0]))
-            sds.append((lend, gap[1]))
+            sds.append((rend, gap[1]))
         next_states = [ move(state, src, dest) for src, dest in sds]
     return next_states
 
